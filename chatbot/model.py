@@ -151,12 +151,13 @@ class Model:
                     output_keep_prob=self.args.dropout
                 )
             return encoDecoCell
+
+        # Multilayer RNN
         encoDecoCell = tf.contrib.rnn.MultiRNNCell(
             [create_rnn_cell() for _ in range(self.args.numLayers)],
         )
 
         # Network input (placeholders)
-
         with tf.name_scope('placeholder_encoder'):
             self.encoderInputs  = [tf.placeholder(tf.int32,   [None, ]) for _ in range(self.args.maxLengthEnco)]  # Batch size * sequence length * input dim
 
@@ -168,7 +169,7 @@ class Model:
         # Define the network
         # Here we use an embedding model, it takes integer as input and convert them into word vector for
         # better word representation
-        decoderOutputs, states = tf.contrib.legacy_seq2seq.embedding_rnn_seq2seq(
+        decoderOutputs, states = tf.contrib.legacy_seq2seq.embedding_attention_seq2seq(
             self.encoderInputs,  # List<[batch=?, inputDim=1]>, list of size args.maxLength
             self.decoderInputs,  # For training, we force the correct output (feed_previous=False)
             encoDecoCell,
