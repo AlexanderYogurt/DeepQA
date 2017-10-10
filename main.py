@@ -22,8 +22,10 @@ Use python 3
 """
 
 from chatbot import chatbot
+import os
 
 
 if __name__ == "__main__":
+    os.environ["CUDA_VISIBLE_DEVICES"] = "8,9,10,11,12,13,14"
     chatbot = chatbot.Chatbot()
     chatbot.main()
